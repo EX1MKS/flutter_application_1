@@ -56,7 +56,7 @@ class _ListProfileState extends State<ListProfile> {
           child: ListTile(
             leading: CircleAvatar(
               backgroundImage: NetworkImage(
-                'https://i.pravatar.cc/1507img=10'
+                'https://ui-avatars.com/api/?name=${profile.name08}'
                 ),
             ),
             title: Text(profile.name08),

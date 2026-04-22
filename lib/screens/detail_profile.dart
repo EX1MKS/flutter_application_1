@@ -101,6 +101,7 @@ class _DetailProfileState extends State<DetailProfile> {
               },
               child: const Text('Go Back'),
             ),
+            SizedBox(height: 15),
             ElevatedButton(
               onPressed: () async {
                 final Profile? updatedProfile = await Navigator.push(

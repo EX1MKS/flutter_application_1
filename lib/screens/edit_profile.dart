@@ -76,6 +76,7 @@ class _EditProfileState extends State<EditProfile> {
                 controller: _descController,
                 decoration: InputDecoration(labelText: 'Description'),
                 ),
+                SizedBox(height: 15),
               ElevatedButton(onPressed: () {
                 if (_formKey.currentState!.validate()){
                   final updatedProfile = Profile(
