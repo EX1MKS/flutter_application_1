@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_application_1/models/profile.dart';
 import 'package:flutter_application_1/screens/edit_profile.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/provider/profile_provider.dart';
 
-class DetailProfile extends StatefulWidget {
-  const DetailProfile({super.key, required this.profile});
+class DetailProfile extends StatelessWidget {
+  final int profileId;
 
-  
-  final Profile profile;
+  const DetailProfile({super.key, required this.profileId});
 
-  @override
-  State<DetailProfile> createState() => _DetailProfileState();
-}
 
-class _DetailProfileState extends State<DetailProfile> {
   // String image1 =
   @override
   Widget build(BuildContext context) {
+      final provider = context.watch<ProfileProvider>();
+
+      final profile = provider.profiles.firstWhere((p) => p.id08 == profileId);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -37,7 +38,7 @@ class _DetailProfileState extends State<DetailProfile> {
                     height: 200,
                    decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(widget.profile.coverphoto08),
+                      image: AssetImage('assets/images/background1.jpg'),
                       fit: BoxFit.cover,
                     ),
                    ),
@@ -46,34 +47,45 @@ class _DetailProfileState extends State<DetailProfile> {
                     top: 110,
                     child: CircleAvatar(
                       radius: 80,
-                      backgroundImage: NetworkImage(widget.profile.profilephoto08),
+                      backgroundImage: NetworkImage('https://media.licdn.com/dms/image/v2/D5603AQGrhW_98u-Dyg/profile-displayphoto-scale_200_200/B56Zknupc2HkAY-/0/1757308164995?e=2147483647&v=beta&t=hy6wMYr-NMrbuCUWTbuo52ZVTLwwgVMa4OTHv5MZYcg'),
                     ),
                   ),
                 ],
               ),
             ),
-            Text(
-              widget.profile.name08,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              widget.profile.bio08,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100),
-            ),
-             SizedBox(height: 8),
-            Text(
-              widget.profile.phonenumber08,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100),
-            ),
-            SizedBox(height: 10),
-             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                widget.profile.desc08,
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.justify,
-              ),
+
+            Consumer<ProfileProvider>(
+              builder: (context, profileProvider, child) {
+              final profile = profileProvider.profiles.firstWhere((p) => p.id08 == profileId);
+              return Column(
+                children: [
+                   Text(
+                    profile.name08,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    profile.bio08,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100),
+                  ),
+                   SizedBox(height: 8),
+                  Text(
+                    profile.phonenumber08,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100),
+                  ),
+                  SizedBox(height: 10),
+                   Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                     profile.desc08,
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ],
+              );
+
+              }  
             ),
             const SizedBox(height: 30),
 
@@ -107,20 +119,18 @@ class _DetailProfileState extends State<DetailProfile> {
                 final Profile? updatedProfile = await Navigator.push(
                   context,
                  MaterialPageRoute(
-                builder: (context) =>EditProfile(profile: widget.profile), 
+                builder: (context) =>EditProfile(profile: profile), 
                 ),
                   );
 
                   if (updatedProfile != null) {
-                    setState(() {
-                      widget.profile.coverphoto08 = updatedProfile.coverphoto08;
-                      widget.profile.profilephoto08 = updatedProfile.profilephoto08;
-                      widget.profile.name08 = updatedProfile.name08;
-                      widget.profile.bio08 = updatedProfile.bio08;
-                      widget.profile.phonenumber08 = updatedProfile.phonenumber08;
-                      widget.profile.desc08 = updatedProfile.desc08;
-                    });
-                      Fluttertoast.showToast(msg: "Profile berhasil diperbarui");
+                   final provider = context.read<ProfileProvider>();
+                   final index = provider.profiles.indexWhere(
+                    (p) => p.id08 == profileId,
+                   );
+                    if (index != -1) {
+                      provider.updateProfile(index, updatedProfile);
+                    }
                   }
               },
               child: const Text('Edit Profile'),

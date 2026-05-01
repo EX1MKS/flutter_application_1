@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/detail_profile.dart';
 import 'package:flutter_application_1/screens/list_profile.dart';
 import 'package:flutter_application_1/models/profile.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/provider/profile_provider.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (_) => ProfileProvider(),child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -173,18 +177,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () {
                 String nama = namaController.text;
+                final provider = context.read<ProfileProvider>();
+                int newId = provider.profiles.isEmpty ? 1 : provider.profiles.last.id08 + 1;
+                
+                final newProfile = Profile(
+                  id08: newId,
+                  coverphoto08: 'assets/images/background1.jpg',
+                  profilephoto08: 'https://media.licdn.com/dms/image/v2/D5603AQGrhW_98u-Dyg/profile-displayphoto-scale_200_200/B56Zknupc2HkAY-/0/1757308164995?e=2147483647&v=beta&t=hy6wMYr-NMrbuCUWTbuo52ZVTLwwgVMa4OTHv5MZYcg',  
+                  name08: nama.isNotEmpty ? nama : "Developer", 
+                  bio08: "Developer",
+                  desc08: "Saya adalah seorang developer yang berkuliah di PNB",
+                  phonenumber08: "081295228281"
+                );
+                
+                provider.addProfile(newProfile);
+
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DetailProfile(profile: Profile(
-                    id08: 0,
-                    coverphoto08: 'assets/images/background1.jpg',
-                    profilephoto08: 'https://media.licdn.com/dms/image/v2/D5603AQGrhW_98u-Dyg/profile-displayphoto-scale_200_200/B56Zknupc2HkAY-/0/1757308164995?e=2147483647&v=beta&t=hy6wMYr-NMrbuCUWTbuo52ZVTLwwgVMa4OTHv5MZYcg',  
-                    name08: nama, 
-                    bio08: "Developer",
-                    desc08: "Saya adalah seorang developer yang berkuliah di PNB",
-                    phonenumber08: "081295228281"
-                    ),),
-                  ),
+                  MaterialPageRoute(builder: (context) => DetailProfile(profileId: newId)),
                 );
               },
               child: Text('Go to Detail Profile'),
