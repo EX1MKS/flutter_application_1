@@ -21,7 +21,7 @@ class _ListProfileState extends State<ListProfile> {
   int lastIndex = provider.profiles.length;
 
   final newProfile = Profile(
-    id08: lastIndex + 1, 
+    id08: 0, 
     coverphoto08: 'assets/images/background1.jpg',
     profilephoto08: 'https://media.licdn.com/dms/image/v2/D5603AQGrhW_98u-Dyg/profile-displayphoto-scale_200_200/B56Zknupc2HkAY-/0/1757308164995?e=2147483647&v=beta&t=hy6wMYr-NMrbuCUWTbuo52ZVTLwwgVMa4OTHv5MZYcg', 
     name08: "Eki ${lastIndex + 1}", 
